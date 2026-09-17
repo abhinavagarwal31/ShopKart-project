@@ -1,5 +1,10 @@
 import Customer from "../models/customer.model.js"
 import bcrypt from 'bcrypt'
+import { genToken } from "../utils/generateToken.js"
+
+const cookieOptions = {
+    httpOnly: true
+}
 
 export const  registerCustomer = async (req, res) => {
     try {
@@ -78,3 +83,12 @@ export const getCustomer = (req, res) =>{
         phone: req.customer.phone
     })
 }
+
+export const logoutCustomer = ((req, res)=>{
+    res.clearCookie("token")
+
+    res.status(200).json({
+        success: true,
+        message: "Logged out successfully"
+    })
+})
