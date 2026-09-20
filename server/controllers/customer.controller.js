@@ -42,6 +42,7 @@ export const  registerCustomer = async (req, res) => {
                 phone: newCustomer.phone
             }
         })
+        console.log(`Customer Registered with the name ${newCustomer.fullName}`)
     } catch (error) {
         res.status(500).json({ message: 'Internal Server Error', error: error })
     }
