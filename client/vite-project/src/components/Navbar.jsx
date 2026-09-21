@@ -1,5 +1,14 @@
+import { axiosInstance } from "../axiosCalls/axios";
+import { useAuth } from "../context/AuthContext";
 
 function Navbar(){
+
+    const{setCustomer} = useAuth()
+
+    const handleLogout = async ()=>{
+        await axiosInstance.post('/customers/logout')
+        setCustomer(null)
+    }
   return (
     <nav className="bg-white shadow-md w-full sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -15,7 +24,9 @@ function Navbar(){
           <div className="flex items-center space-x-6">
             <button
               type="button"
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 rounded-lg transition duration-150 ease-in-out shadow-sm focus:outline-none">
+              className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 rounded-lg transition duration-150 ease-in-out shadow-sm focus:outline-none"
+              onClick={handleLogout}
+              >
               Logout
             </button>
           </div>
