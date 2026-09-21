@@ -6,6 +6,7 @@ const AuthContext = createContext()
 
 export const AuthProvider = ({children})=>{
     const [customer, setCustomer] = useState(null)
+    const [loader, setLoader] = useState(true)
     
     useEffect(()=>{
         const getCustomer = async () => {
@@ -14,13 +15,15 @@ export const AuthProvider = ({children})=>{
                 setCustomer(response.data)
             } catch (error) {
                 setCustomer(null)
+            } finally{
+                setLoader(false)
             }
         }
         getCustomer()
     },[])
 
     return(
-        <AuthContext.Provider value={{customer, setCustomer}}>
+        <AuthContext.Provider value={{ customer, setCustomer, loader }}>
             {children}
         </AuthContext.Provider>
     )
