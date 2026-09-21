@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { axiosInstance } from '../../axiosCalls/axios';
+import { useAuth } from '../context/AuthContext';
 
 function Login() {
   const [form, setForm] = useState({
@@ -9,7 +10,8 @@ function Login() {
   });
   const [loader, setLoader] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
-
+  
+const {setCustomer} = useAuth()
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -23,6 +25,8 @@ function Login() {
 
     try {
       await axiosInstance.post('/customers/login', form);
+      const response = await axiosInstance.get('/customers/me')
+      setCustomer(response.data)
       navigate('/home');
     } catch (error) {
       const message =

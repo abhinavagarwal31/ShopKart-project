@@ -8,8 +8,10 @@ function Home() {
     return (
         <div>
             <h1>Home</h1>
-            <p>Welcome, {customer.fullName}</p>
-            
+
+            {customer && (
+                <p>Welcome, {customer.fullName}</p>
+            )}
         </div>
     );
 }
