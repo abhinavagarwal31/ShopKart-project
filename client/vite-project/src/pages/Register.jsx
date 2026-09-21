@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { axiosInstance } from '../../axiosCalls/axios';
+import { axiosInstance } from '../axiosCalls/axios';
 import { useNavigate, Link } from 'react-router-dom';
 
 function Register() {
