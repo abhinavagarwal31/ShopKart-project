@@ -13,5 +13,14 @@ export const createProduct = async (req, res)=>{
         return res.status(400).json({message: "Stock cannot be less than 0."})
     }
     const newProduct = await Product.create(req.body)
-    res.status(200).json(newProduct)
+    res.status(201).json(newProduct)
+}
+
+export const getAllProducts = async (req, res)=>{
+    const products = await Product.find().select("-description -createdAt -updatedAt -__v")
+    res.status(201).json({
+        success: true,
+        count: products.length,
+        products: products
+    })
 }
