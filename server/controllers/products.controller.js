@@ -18,7 +18,17 @@ export const createProduct = async (req, res)=>{
 }
 
 export const getAllProducts = async (req, res)=>{
-    const products = await Product.find().select("-description -createdAt -updatedAt -__v")
+    
+    const {search, category} = req.query
+    const filter = {}
+    if(search){
+        filter.name = {$regex: search, $options: "i"}
+    }
+    if(category){
+        filter.category = category
+    }
+
+    const products = await Product.find(filter).select("-description -createdAt -updatedAt -__v")
     res.status(200).json({
         success: true,
         count: products.length,
