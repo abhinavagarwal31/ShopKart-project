@@ -1,3 +1,4 @@
+import mongoose from "mongoose"
 import Product from "../models/product.model.js"
 
 
@@ -18,9 +19,23 @@ export const createProduct = async (req, res)=>{
 
 export const getAllProducts = async (req, res)=>{
     const products = await Product.find().select("-description -createdAt -updatedAt -__v")
-    res.status(201).json({
+    res.status(200).json({
         success: true,
         count: products.length,
         products: products
     })
+}
+
+export const getProduct = async (req, res)=>{
+    const {id} = req.params
+    if(!mongoose.Types.ObjectId.isValid(id)){
+        res.status(400).json({message: "Invalid Product ID"})
+    }
+    const product = await Product.findById(id).select("-createdAt -updatedAt -__v")
+    if(!product){
+        res.status(404).json({
+            message: "Product Not Found"
+        })
+    }
+    res.status(200).json(product)
 }
