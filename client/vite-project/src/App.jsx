@@ -5,6 +5,7 @@ import { AuthProvider } from "./context/AuthContext"
 import Home from "./pages/Home"
 import ProtectedRoute from "./components/ProtectedRoute"
 import PublicRoute from "./components/PublicRoute"
+import Products from "./pages/Products"
 
 function App() {
 
@@ -16,6 +17,7 @@ function App() {
           <Route path="/login" element = {<PublicRoute><Login/></PublicRoute>}/>
 
           <Route path="/home" element = {<ProtectedRoute><Home/></ProtectedRoute>}/>
+          <Route path="/products" element = {<Products/>}/>
         </Routes>
       </BrowserRouter>
     </AuthProvider>
