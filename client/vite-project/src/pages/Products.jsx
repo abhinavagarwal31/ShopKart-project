@@ -2,11 +2,35 @@ import { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import ProductCard from '../components/ProductCard';
 import { axiosInstance } from '../axiosCalls/axios';
+import SearchBar from '../components/SearchBar';
 
 const ProductPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [search, setSearch] = useState("")
+  const [category, setCategory] = useState("")
+
+  const handleSearch = async()=>{
+    try {
+      setError(null)
+      setLoading(true)
+      const response = await axiosInstance.get('/catalogue/products', {
+        params: {
+          search: search,
+          category: category
+        }
+      });
+      setProducts(response.data.products);
+    } catch (error) {
+      setError(
+          error.response?.data?.message || 'Failed to load products. Please try again later.'
+        );
+    }finally{
+      setLoading(false)
+    }
+
+  }
 
   useEffect(() => {
     const getProd = async () => {
@@ -39,6 +63,11 @@ const ProductPage = () => {
           <p className="mt-2 text-sm sm:text-base text-gray-600">
             Browse through our collection of premium quality items.
           </p>
+        </div>
+
+        {/* Search Bar Section */}
+        <div className="mb-8">
+          <SearchBar setSearch={setSearch} setCategory={setCategory} handleSearch={handleSearch}/>
         </div>
 
         {/* Loading State */}
