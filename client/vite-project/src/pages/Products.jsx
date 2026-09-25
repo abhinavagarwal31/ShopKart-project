@@ -67,7 +67,7 @@ const ProductPage = () => {
 
         {/* Search Bar Section */}
         <div className="mb-8">
-          <SearchBar setSearch={setSearch} setCategory={setCategory} handleSearch={handleSearch}/>
+          <SearchBar search={search} category={category} setSearch={setSearch} setCategory={setCategory} handleSearch={handleSearch}/>
         </div>
 
         {/* Loading State */}

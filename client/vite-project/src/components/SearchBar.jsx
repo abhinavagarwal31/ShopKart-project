@@ -1,6 +1,6 @@
 
 
-const SearchBar = ({setSearch, setCategory, handleSearch}) => {
+const SearchBar = ({search, setSearch, category, setCategory, handleSearch}) => {
 
   
   return (
@@ -10,7 +10,7 @@ const SearchBar = ({setSearch, setCategory, handleSearch}) => {
         {/* Category Dropdown */}
         <div className="w-full sm:w-48 relative border-b sm:border-b-0 sm:border-r border-gray-200 pb-2 sm:pb-0 sm:pr-2">
           <select
-            defaultValue=""
+            value={category}
             className="w-full bg-transparent text-gray-700 font-medium text-sm px-3 py-2 rounded-xl focus:outline-none cursor-pointer"
             onChange={(e)=> setCategory(e.target.value)}
           >
@@ -27,6 +27,7 @@ const SearchBar = ({setSearch, setCategory, handleSearch}) => {
           <input
             type="text"
             placeholder="Search products..."
+            value={search}
             onChange={(e)=> setSearch(e.target.value)}
             className="w-full bg-transparent text-gray-900 placeholder-gray-400 text-sm focus:outline-none py-2"
           />
