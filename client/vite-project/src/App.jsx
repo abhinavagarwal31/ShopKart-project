@@ -6,6 +6,7 @@ import Home from "./pages/Home"
 import ProtectedRoute from "./components/ProtectedRoute"
 import PublicRoute from "./components/PublicRoute"
 import Products from "./pages/Products"
+import ProductDetails from "./pages/ProductDetails"
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
 
           <Route path="/home" element = {<ProtectedRoute><Home/></ProtectedRoute>}/>
           <Route path="/products" element = {<Products/>}/>
+          <Route path="/products/:id" element = {<ProductDetails/>}/>
         </Routes>
       </BrowserRouter>
     </AuthProvider>
