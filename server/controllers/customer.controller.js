@@ -94,3 +94,16 @@ export const logoutCustomer = ((req, res)=>{
         message: "Logged out successfully"
     })
 })
+
+export const changePassword = async (req, res)=>{
+    const {oldP, newP} = req.body
+    const passChk = await bcrypt.compare(oldP.toString(), req.customer.password)
+    if(!passChk){
+        return res.status(401).json({message: "Invalid Credentials"})
+    }
+    const salt = await bcrypt.genSalt(10)
+    const hashedPass = await bcrypt.hash(newP.toString(), salt)
+    const updated = await Customer.findByIdAndUpdate(req.customer._id, {password: hashedPass})
+    
+    res.status(200).json(updated)
+}
