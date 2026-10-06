@@ -10,11 +10,13 @@ const ProductPage = () => {
   const [error, setError] = useState(null);
   const [search, setSearch] = useState("")
   const [category, setCategory] = useState("")
+  const [sort, setSort] = useState("")
 
   const handleSearch = async()=>{
     try {
       setError(null)
       setLoading(true)
+      setSort("")
       const response = await axiosInstance.get('/catalogue/products', {
         params: {
           search: search,
@@ -29,7 +31,33 @@ const ProductPage = () => {
     }finally{
       setLoading(false)
     }
+  }
 
+  const handleSort = async (e) => {
+    const selectedSort = e.target.value;
+    setSort(selectedSort);
+
+    try {
+      setError(null);
+      setLoading(true);
+
+      const response = await axiosInstance.get('/catalogue/products', {
+        params: {
+          search,
+          category,
+          sort: selectedSort,
+        },
+      });
+
+      setProducts(response.data.products);
+    } catch (error) {
+      setError(
+        error.response?.data?.message ||
+          'Failed to sort products. Please try again later.'
+      );
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -66,8 +94,23 @@ const ProductPage = () => {
         </div>
 
         {/* Search Bar Section */}
-        <div className="mb-8">
+        <div className="mb-8 flex flex-col sm:flex-row items-start gap-4">
           <SearchBar search={search} category={category} setSearch={setSearch} setCategory={setCategory} handleSearch={handleSearch}/>
+          <div className="w-full sm:w-44 sm:mt-0">
+            <label htmlFor="sort-products" className="sr-only">
+              Sort products
+            </label>
+            <select
+              id="sort-products"
+              value={sort}
+              onChange={handleSort}
+              className="w-full bg-white text-gray-700 font-medium text-sm pl-3 pr-5 py-2.5 rounded-xl border border-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+            >
+              <option value="">Sort products</option>
+              <option value="price_asc">Price: Low to High</option>
+              <option value="price_desc">Price: High to Low</option>
+            </select>
+          </div>
         </div>
 
         {/* Loading State */}
@@ -104,4 +147,4 @@ const ProductPage = () => {
   );
 };
 
-export default ProductPage;
+export default ProductPage
