@@ -22,7 +22,7 @@ app.use(cors({
     credentials: true
 }))
 app.use('/customers', customerRouter)
-app.use('/catalogue', productRouter)
+app.use('/products', productRouter)
 app.use('/wishlist', wishRouter)
 
 

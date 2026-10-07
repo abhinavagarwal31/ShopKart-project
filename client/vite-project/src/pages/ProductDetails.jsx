@@ -15,7 +15,7 @@ function ProductDetails() {
       try {
         setLoading(true);
         setError(null);
-        const response = await axiosInstance.get(`/catalogue/products/${id}`);
+        const response = await axiosInstance.get(`/products/${id}`);
         setProduct(response.data);
       } catch (err) {
         console.error(err);

@@ -17,7 +17,7 @@ const ProductPage = () => {
       setError(null)
       setLoading(true)
       setSort("")
-      const response = await axiosInstance.get('/catalogue/products', {
+      const response = await axiosInstance.get('/products', {
         params: {
           search: search,
           category: category
@@ -41,7 +41,7 @@ const ProductPage = () => {
       setError(null);
       setLoading(true);
 
-      const response = await axiosInstance.get('/catalogue/products', {
+      const response = await axiosInstance.get('/products', {
         params: {
           search,
           category,
@@ -63,7 +63,7 @@ const ProductPage = () => {
   useEffect(() => {
     const getProd = async () => {
       try {
-        const response = await axiosInstance.get('/catalogue/products');
+        const response = await axiosInstance.get('/products');
         setProducts(response.data.products);
       } catch (err) {
         setError(
