@@ -44,3 +44,27 @@ export const getWish = async(req, res)=>{
         return res.status(500).json({message: "Internal Server Error", error: error})
     }
 }
+
+export const deleteWish = async(req, res)=>{
+    try {
+        const customerId = req.customer._id
+        const {productId} = req.params
+        
+        if(!customerId){
+            return res.status(401).json({message: "Customer Not Authenticated"})
+        }
+        if(!mongoose.isValidObjectId(productId)){
+            return res.status(400).json({message: "Invalid Product ID"})
+        }
+    
+        const updated = await Customer.findOneAndUpdate({_id: customerId, wishlist: {$eq: productId}}, {$pull: {wishlist: productId}})
+    
+        if(!updated){
+            return res.status(409).json({message: "Product Already Not in Wishlist"})
+        }
+    
+        res.status(200).json({success: true, message: "Product removed from wishlist"})
+    } catch (error) {
+        return res.status(500).json({message: "Internal Server Error", error: error})
+    }
+}
