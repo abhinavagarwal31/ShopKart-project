@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser'
 import customerRouter from './routes/customer.routes.js'
 import productRouter from './routes/product.routes.js'
 import cors from 'cors'
+import wishRouter from './routes/wishlist.routes.js'
 
 const app = express()
 const PORT = 9000
@@ -22,6 +23,7 @@ app.use(cors({
 }))
 app.use('/customers', customerRouter)
 app.use('/catalogue', productRouter)
+app.use('/wishlist', wishRouter)
 
 
 
