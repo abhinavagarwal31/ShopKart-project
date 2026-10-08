@@ -1,7 +1,13 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { axiosInstance } from '../axiosCalls/axios';
+import { useAuth } from '../context/AuthContext';
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
+  const { customer, wishlist, setWishlist } = useAuth();
+  const [wishlistLoading, setWishlistLoading] = useState(false);
+  const [wishlistError, setWishlistError] = useState('');
 
   // Guard clause: Render error state if no product data is provided
   if (!product) {
@@ -27,6 +33,7 @@ const ProductCard = ({ product }) => {
   }
 
   const { _id, name, image, category, price, stock } = product;
+  const isWishlisted = wishlist.some((prod) => prod._id === _id);
 
   const handleViewDetails = () => {
     if (_id) {
@@ -34,8 +41,42 @@ const ProductCard = ({ product }) => {
     }
   };
 
+  const handleToggleWishlist = async (e) => {
+    e.stopPropagation();
+
+    if (!customer) {
+      navigate('/login');
+      return;
+    }
+
+    if (!_id || wishlistLoading) {
+      return;
+    }
+
+    setWishlistLoading(true);
+    setWishlistError('');
+
+    try {
+      if (isWishlisted) {
+        await axiosInstance.delete(`/wishlist/${_id}`);
+        setWishlist((previousWishlist) =>
+          previousWishlist.filter((wishlistProduct) => wishlistProduct._id !== _id)
+        );
+      } else {
+        await axiosInstance.post(`/wishlist/${_id}`);
+        setWishlist((previousWishlist) => [...previousWishlist, product]);
+      }
+    } catch (error) {
+      setWishlistError(
+        error.response?.data?.message || 'Unable to update your wishlist.'
+      );
+    } finally {
+      setWishlistLoading(false);
+    }
+  };
+
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-200 flex flex-col justify-between max-w-sm w-full">
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-200 flex flex-col justify-between max-w-sm w-full relative group">
       {/* Product Image with Fallback */}
       <div className="w-full h-48 bg-gray-100 overflow-hidden relative flex items-center justify-center">
         {image ? (
@@ -58,6 +99,39 @@ const ProductCard = ({ product }) => {
           </svg>
           <span className="text-xs">No image available</span>
         </div>
+
+        {/* Wishlist Button */}
+        <button
+          type="button"
+          onClick={handleToggleWishlist}
+          disabled={wishlistLoading}
+          title={isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
+          aria-label={isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
+          className={`absolute top-3 right-3 p-2 rounded-full shadow-md backdrop-blur-sm transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-rose-500 active:scale-90 disabled:cursor-wait disabled:opacity-70 ${
+            isWishlisted
+              ? 'bg-rose-500 text-white hover:bg-rose-600'
+              : 'bg-white/80 text-gray-600 hover:bg-white hover:text-rose-500'
+          }`}
+        >
+          <svg
+            className={`w-5 h-5 transition-transform duration-200 ${isWishlisted ? 'scale-110' : 'scale-100'}`}
+            fill={isWishlisted ? 'currentColor' : 'none'}
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.293l1.318-1.275a4.5 4.5 0 116.364 6.364L12 21.364l-7.682-7.682a4.5 4.5 0 010-6.364z"
+            />
+          </svg>
+        </button>
+        {wishlistError && (
+          <span className="absolute top-16 right-3 rounded bg-white px-2 py-1 text-xs text-rose-600 shadow">
+            {wishlistError}
+          </span>
+        )}
       </div>
 
       {/* Product Details */}
