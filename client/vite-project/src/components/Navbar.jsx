@@ -6,7 +6,7 @@ function Navbar(){
 
   const navigate = useNavigate()
 
-    const{setCustomer} = useAuth()
+    const{wishlist, setCustomer} = useAuth()
 
     const handleLogout = async ()=>{
         await axiosInstance.post('/customers/logout')
@@ -33,6 +33,13 @@ function Navbar(){
               onClick={()=>navigate('/products')}
               >
               Explore Products
+            </button>
+            <button
+              type="button"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 rounded-lg transition duration-150 ease-in-out shadow-sm focus:outline-none"
+              onClick={()=>navigate('/wishlist')}
+              >
+              Wishlist ({wishlist.length})
             </button>
             <button
               type="button"
