@@ -36,3 +36,15 @@ export const addProduct = async(req, res)=>{
         return res.status(500).json({message: "Internal Server Error", error: error})
     }
 }
+
+export const getCart = async(req, res)=>{
+    try {
+        const customerId = req.customer._id
+        
+        const customer = await Customer.findById(customerId).populate("cart.product", "_id name price image stock")
+    
+        res.status(200).json({success: true, cart: customer.cart})
+    } catch (error) {
+        return res.status(500).json({message: "Internal Server Error", error: error})
+    }
+}
