@@ -34,6 +34,7 @@ const customerSchema = new mongoose.Schema({
 
     cart: [
       {
+        _id: false,
         product: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Product",

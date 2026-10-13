@@ -6,6 +6,7 @@ import customerRouter from './routes/customer.routes.js'
 import productRouter from './routes/product.routes.js'
 import cors from 'cors'
 import wishRouter from './routes/wishlist.routes.js'
+import cartRouter from './routes/cart.routes.js'
 
 const app = express()
 const PORT = 9000
@@ -15,15 +16,18 @@ mongoose.connect(process.env.dburl).then(()=>{
 }).catch((err) => {
     console.log(err)
 })
+
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true
 }))
+
 app.use('/customers', customerRouter)
 app.use('/products', productRouter)
 app.use('/wishlist', wishRouter)
+app.use('/cart', cartRouter)
 
 
 
