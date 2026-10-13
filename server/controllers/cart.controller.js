@@ -48,3 +48,42 @@ export const getCart = async(req, res)=>{
         return res.status(500).json({message: "Internal Server Error", error: error})
     }
 }
+
+export const updateCart = async(req, res)=>{
+    try {
+        const customerId = req.customer._id
+    
+        const {productId} = req.params
+        if(!mongoose.isValidObjectId(productId)){
+            return res.status(400).json({message: "Invalid Product ID"})
+        }
+    
+        const product = await Product.findById(productId)
+        if(!product){
+            return res.status(404).json({message: "Product Not Found"})
+        }
+    
+        const {quantity} = req.body
+        if(!Number.isInteger(quantity) || quantity < 1){
+            return res.status(400).json({message: "Invalid quantity"})
+        }
+        if(quantity > product.stock){
+            return res.status(400).json({message: "Required quantity Not Available"})
+        }
+    
+        const customer = await Customer.findById(customerId)
+        const cart = customer.cart
+
+    
+        const target = cart.find((item)=> item.product.toString() === productId.toString())
+        if(!target){
+            return res.status(404).json({message: "Product Not in Cart"})
+        }
+
+        target.quantity = quantity
+        await customer.save()
+        res.status(200).json({success: true, message: "Cart updated"})
+    } catch (error) {
+        return res.status(500).json({message: "Internal Server Error", error: error})
+    }
+}
