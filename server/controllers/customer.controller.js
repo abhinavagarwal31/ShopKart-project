@@ -3,7 +3,10 @@ import bcrypt from 'bcrypt'
 import { genToken } from "../utils/generateToken.js"
 
 const cookieOptions = {
-    httpOnly: true
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    path: "/"
 }
 
 export const  registerCustomer = async (req, res) => {
