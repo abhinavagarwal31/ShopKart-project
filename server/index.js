@@ -10,7 +10,7 @@ import cartRouter from './routes/cart.routes.js'
 import orderRouter from './routes/order.routes.js'
 
 const app = express()
-const PORT = 9000
+const PORT = process.env.PORT || 9000
 
 mongoose.connect(process.env.dburl).then(()=>{
     console.log("DB Connected")
@@ -20,8 +20,14 @@ mongoose.connect(process.env.dburl).then(()=>{
 
 app.use(express.json())
 app.use(cookieParser())
+
+const allowedOrigins = [
+    'http://localhost:5173',
+    process.env.CLIENT_URL
+].filter(Boolean)
+
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: allowedOrigins,
     credentials: true
 }))
 
