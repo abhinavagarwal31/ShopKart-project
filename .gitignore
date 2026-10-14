@@ -8,6 +8,3 @@ node_modules/
 
 # Production builds
 dist/
-
-# Problem statements
-problem_statements/
