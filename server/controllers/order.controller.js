@@ -144,3 +144,24 @@ export const verifyPayment = async(req, res)=>{
         return res.status(500).json({message: "Internal Server Error", error: error})
     }
 }
+
+export const getOrders = async (req, res) => {
+    try {
+        const customerId = req.customer._id
+
+        const orders = await Order.find({ customer: customerId })
+            .select("totalAmount status createdAt items")
+            .sort({ createdAt: -1 })
+
+        return res.status(200).json({
+            success: true,
+            count: orders.length,
+            orders
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
