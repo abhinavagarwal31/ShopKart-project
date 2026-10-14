@@ -1,13 +1,16 @@
 import { useState } from 'react';
 import { Trash2, Plus, Minus, ShoppingBag } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { useCart } from '../context/CartContext';
 
 export default function CartPage() {
+  const navigate = useNavigate();
   const {
     cart: cartItems,
     loading,
     error,
+    fetchCart,
     updateCartItem,
     removeFromCart,
   } = useCart();
@@ -74,11 +77,28 @@ export default function CartPage() {
         ) : error ? (
           <div className="bg-white rounded-xl p-12 text-center border border-red-200 shadow-sm">
             <p className="text-lg font-medium text-red-600">{error}</p>
+            <button
+              type="button"
+              onClick={() => fetchCart().catch(() => {})}
+              className="mt-6 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg text-sm transition-colors"
+            >
+              Try Again
+            </button>
           </div>
         ) : cartItems.length === 0 ? (
           <div className="bg-white rounded-xl p-12 text-center border border-gray-200 shadow-sm">
             <ShoppingBag className="w-12 h-12 mx-auto text-gray-400 mb-3" />
             <p className="text-lg font-medium text-gray-600">Your cart is empty</p>
+            <p className="mt-2 text-sm text-gray-500">
+              Looks like you haven't added anything yet.
+            </p>
+            <button
+              type="button"
+              onClick={() => navigate('/products')}
+              className="mt-6 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg text-sm transition-colors"
+            >
+              Browse Products
+            </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
