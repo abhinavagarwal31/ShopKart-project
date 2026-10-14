@@ -7,6 +7,7 @@ import productRouter from './routes/product.routes.js'
 import cors from 'cors'
 import wishRouter from './routes/wishlist.routes.js'
 import cartRouter from './routes/cart.routes.js'
+import orderRouter from './routes/order.routes.js'
 
 const app = express()
 const PORT = 9000
@@ -28,7 +29,7 @@ app.use('/customers', customerRouter)
 app.use('/products', productRouter)
 app.use('/wishlist', wishRouter)
 app.use('/cart', cartRouter)
-
+app.use('/order', orderRouter)
 
 
 
