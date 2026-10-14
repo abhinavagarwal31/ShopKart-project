@@ -194,7 +194,11 @@ export default function CartPage() {
                 <span>₹{subtotal.toLocaleString('en-IN')}</span>
               </div>
 
-              <button className="w-full mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-xl transition shadow-sm">
+              <button
+                type="button"
+                onClick={() => navigate('/checkout')}
+                className="w-full mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-xl transition shadow-sm"
+              >
                 Proceed to Checkout
               </button>
             </div>
