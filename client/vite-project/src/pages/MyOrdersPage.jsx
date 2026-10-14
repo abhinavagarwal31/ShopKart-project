@@ -36,7 +36,10 @@ export default function MyOrdersPage() {
       setLoading(true)
       setError('')
       const response = await axiosInstance.get('/orders')
-      setOrders(response.data.orders || [])
+      if (!response.data.success) {
+        throw new Error(response.data.message || 'Unable to load your orders.')
+      }
+      setOrders(Array.isArray(response.data.orders) ? response.data.orders : [])
     } catch (requestError) {
       setError(
         requestError.response?.data?.message || 'Unable to load your orders.'
@@ -133,6 +136,15 @@ export default function MyOrdersPage() {
                   </span>
                 </div>
 
+                <div className="mt-4 flex flex-wrap gap-2 text-xs">
+                  <span className="rounded-full bg-gray-100 px-2.5 py-1 font-medium text-gray-600">
+                    Payment: {order.paymentStatus || 'PENDING'}
+                  </span>
+                  <span className="rounded-full bg-gray-100 px-2.5 py-1 font-medium text-gray-600">
+                    {(order.items || []).reduce((count, item) => count + item.quantity, 0)} item(s)
+                  </span>
+                </div>
+
                 <div className="mt-5 divide-y divide-gray-100 border-y border-gray-100">
                   {(order.items || []).map((item, index) => (
                     <div key={`${item.product || item.name}-${index}`} className="flex justify-between py-3 text-sm">
@@ -171,7 +183,7 @@ export default function MyOrdersPage() {
                     </p>
                     <p className="mt-2">
                       <span className="font-medium text-gray-900">Payment status:</span>{' '}
-                      {order.paymentStatus || 'Available after payment verification'}
+                      {order.paymentStatus || 'PENDING'}
                     </p>
                   </div>
                 )}

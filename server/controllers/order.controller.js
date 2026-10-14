@@ -150,7 +150,7 @@ export const getOrders = async (req, res) => {
         const customerId = req.customer._id
 
         const orders = await Order.find({ customer: customerId })
-            .select("totalAmount status createdAt items")
+            .select("totalAmount status createdAt items paymentStatus")
             .sort({ createdAt: -1 })
 
         return res.status(200).json({
