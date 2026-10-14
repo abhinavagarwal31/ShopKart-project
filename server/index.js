@@ -1,5 +1,5 @@
 import express from 'express'
-import dotenv from 'dotenv'
+import 'dotenv/config'
 import mongoose from 'mongoose'
 import cookieParser from 'cookie-parser'
 import customerRouter from './routes/customer.routes.js'
@@ -11,7 +11,7 @@ import orderRouter from './routes/order.routes.js'
 
 const app = express()
 const PORT = 9000
-dotenv.config()
+
 mongoose.connect(process.env.dburl).then(()=>{
     console.log("DB Connected")
 }).catch((err) => {
