@@ -9,6 +9,7 @@ import PublicRoute from "./components/PublicRoute"
 import Products from "./pages/Products"
 import ProductDetails from "./pages/ProductDetails"
 import Wishlist from "./pages/Wishlist"
+import Cart from "./pages/Cart"
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
             <Route path="/products" element = {<ProtectedRoute><Products/></ProtectedRoute>}/>
             <Route path="/products/:id" element = {<ProductDetails/>}/>
             <Route path="/wishlist" element = {<ProtectedRoute><Wishlist/></ProtectedRoute>}/>
+            <Route path="/cart" element = {<ProtectedRoute><Cart/></ProtectedRoute>}/>
           </Routes>
         </BrowserRouter>
       </CartProvider>

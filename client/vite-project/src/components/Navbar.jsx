@@ -1,12 +1,16 @@
 import { axiosInstance } from "../axiosCalls/axios";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
+import { ShoppingBag } from "lucide-react";
 
 function Navbar(){
 
   const navigate = useNavigate()
 
     const{wishlist, setCustomer} = useAuth()
+    const { cart } = useCart()
+    const totalItems = cart.reduce((total, item) => total + item.quantity, 0)
 
     const handleLogout = async ()=>{
         await axiosInstance.post('/customers/logout')
@@ -40,6 +44,16 @@ function Navbar(){
               onClick={()=>navigate('/wishlist')}
               >
               Wishlist ({wishlist.length})
+            </button>
+            <button
+              type="button"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 rounded-lg transition duration-150 ease-in-out shadow-sm focus:outline-none"
+              onClick={()=>navigate('/cart')}
+              >
+              <span className="inline-flex items-center gap-1.5">
+                <ShoppingBag className="h-4 w-4" aria-hidden="true" />
+                Cart ({totalItems})
+              </span>
             </button>
             <button
               type="button"
