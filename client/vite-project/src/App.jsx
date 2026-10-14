@@ -12,6 +12,7 @@ import Wishlist from "./pages/Wishlist"
 import Cart from "./pages/Cart"
 import Checkout from "./pages/Checkout"
 import OrderConfirmation from "./pages/OrderConfirmation"
+import MyOrdersPage from "./pages/MyOrdersPage"
 
 function App() {
 
@@ -30,6 +31,7 @@ function App() {
             <Route path="/cart" element = {<ProtectedRoute><Cart/></ProtectedRoute>}/>
             <Route path="/checkout" element = {<ProtectedRoute><Checkout/></ProtectedRoute>}/>
             <Route path="/order-confirmation" element = {<ProtectedRoute><OrderConfirmation/></ProtectedRoute>}/>
+            <Route path="/orders" element = {<ProtectedRoute><MyOrdersPage/></ProtectedRoute>}/>
           </Routes>
         </BrowserRouter>
       </CartProvider>

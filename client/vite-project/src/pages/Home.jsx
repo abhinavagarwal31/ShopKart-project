@@ -1,10 +1,28 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { useAuth } from '../context/AuthContext';
+import { axiosInstance } from '../axiosCalls/axios';
 
 function Home() {
-  // Static placeholder data
-  const {customer} = useAuth()
+  const navigate = useNavigate();
+  const { customer, wishlist } = useAuth();
+  const [orderCount, setOrderCount] = useState(null);
+
+  useEffect(() => {
+    const fetchOrderCount = async () => {
+      try {
+        const response = await axiosInstance.get('/orders');
+        setOrderCount(response.data.count ?? response.data.orders?.length ?? 0);
+      } catch {
+        // The full orders page provides the detailed error and retry state.
+        setOrderCount(null);
+      }
+    };
+
+    // The dashboard only needs the count; the orders page owns the full list.
+    fetchOrderCount();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -67,21 +85,31 @@ function Home() {
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
               <div>
                 <span className="text-sm font-semibold text-gray-500">Recent Orders</span>
-                <p className="text-3xl font-extrabold text-gray-900 mt-2">12</p>
+                <p className="text-3xl font-extrabold text-gray-900 mt-2">
+                  {orderCount ?? '—'}
+                </p>
               </div>
-              <a href="#" className="text-sm font-medium text-indigo-600 hover:text-indigo-500 mt-4 block">
+              <button
+                type="button"
+                onClick={() => navigate('/orders')}
+                className="text-left text-sm font-medium text-indigo-600 hover:text-indigo-500 mt-4 block"
+              >
                 View order history &rarr;
-              </a>
+              </button>
             </div>
 
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
               <div>
                 <span className="text-sm font-semibold text-gray-500">Wishlist Items</span>
-                <p className="text-3xl font-extrabold text-gray-900 mt-2">5</p>
+                <p className="text-3xl font-extrabold text-gray-900 mt-2">{wishlist.length}</p>
               </div>
-              <a href="#" className="text-sm font-medium text-indigo-600 hover:text-indigo-500 mt-4 block">
+              <button
+                type="button"
+                onClick={() => navigate('/wishlist')}
+                className="text-left text-sm font-medium text-indigo-600 hover:text-indigo-500 mt-4 block"
+              >
                 View saved items &rarr;
-              </a>
+              </button>
             </div>
 
             <div className="sm:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
