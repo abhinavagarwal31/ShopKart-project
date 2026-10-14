@@ -96,14 +96,17 @@ export default function Checkout() {
 
   const handlePaymentSuccess = async (payment, shopKartOrderId) => {
     try {
-      await axiosInstance.post('/orders/verify-payment', {
+      const response = await axiosInstance.post('/orders/verify-payment', {
         shopKartOrderId,
         razorpay_order_id: payment.razorpay_order_id,
         razorpay_payment_id: payment.razorpay_payment_id,
         razorpay_signature: payment.razorpay_signature,
       })
       await fetchCart()
-      navigate('/home')
+      navigate('/order-confirmation', {
+        state: { order: response.data.order },
+        replace: true,
+      })
     } catch (error) {
       setRequestError(
         error.response?.data?.message || 'Payment verification failed. Please contact support.'

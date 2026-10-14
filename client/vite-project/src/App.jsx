@@ -11,6 +11,7 @@ import ProductDetails from "./pages/ProductDetails"
 import Wishlist from "./pages/Wishlist"
 import Cart from "./pages/Cart"
 import Checkout from "./pages/Checkout"
+import OrderConfirmation from "./pages/OrderConfirmation"
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
             <Route path="/wishlist" element = {<ProtectedRoute><Wishlist/></ProtectedRoute>}/>
             <Route path="/cart" element = {<ProtectedRoute><Cart/></ProtectedRoute>}/>
             <Route path="/checkout" element = {<ProtectedRoute><Checkout/></ProtectedRoute>}/>
+            <Route path="/order-confirmation" element = {<ProtectedRoute><OrderConfirmation/></ProtectedRoute>}/>
           </Routes>
         </BrowserRouter>
       </CartProvider>
