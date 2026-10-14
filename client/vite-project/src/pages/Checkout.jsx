@@ -4,7 +4,7 @@ export default function Checkout() {
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
-    address: '',
+    addressLine1: '',
     city: '',
     state: '',
     pincode: '',
@@ -26,7 +26,7 @@ export default function Checkout() {
         if (!/^\d{10}$/.test(trimmedValue)) return 'Phone number must be a valid 10-digit number.';
         return '';
 
-      case 'address':
+      case 'addressLine1':
         if (!trimmedValue) return 'Address is required.';
         if (trimmedValue.length < 10) return 'Address must be at least 10 characters long.';
         return '';
@@ -127,13 +127,13 @@ export default function Checkout() {
               <div className="w-64">
                 <input
                   type="text"
-                  name="address"
-                  value={formData.address}
+                  name="addressLine1"
+                  value={formData.addressLine1}
                   onChange={handleChange}
-                  className={`border px-2 py-1 w-full rounded ${errors.address ? 'border-red-500' : 'border-gray-400'}`}
-                  aria-invalid={Boolean(errors.address)}
+                  className={`border px-2 py-1 w-full rounded ${errors.addressLine1 ? 'border-red-500' : 'border-gray-400'}`}
+                  aria-invalid={Boolean(errors.addressLine1)}
                 />
-                {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
+                {errors.addressLine1 && <p className="text-red-500 text-xs mt-1">{errors.addressLine1}</p>}
               </div>
             </div>
 
