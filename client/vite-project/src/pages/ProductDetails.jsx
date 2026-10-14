@@ -1,14 +1,30 @@
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { axiosInstance } from '../axiosCalls/axios';
+import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 
 function ProductDetails() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [cartLoading, setCartLoading] = useState(false);
+  const [cartError, setCartError] = useState('');
+  const [cartAdded, setCartAdded] = useState(false);
+  const cartAddedTimeout = useRef(null);
+  const { customer } = useAuth();
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
 
   const { id } = useParams();
+
+  useEffect(() => () => {
+    if (cartAddedTimeout.current) {
+      clearTimeout(cartAddedTimeout.current);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -30,6 +46,36 @@ function ProductDetails() {
     };
     fetchProduct();
   }, [id]);
+
+  const handleAddToCart = async () => {
+    if (!customer) {
+      navigate('/login');
+      return;
+    }
+
+    if (!product?._id || product.stock < 1 || cartLoading) {
+      return;
+    }
+
+    setCartLoading(true);
+    setCartError('');
+    setCartAdded(false);
+
+    try {
+      await addToCart(product._id);
+      setCartAdded(true);
+      cartAddedTimeout.current = setTimeout(() => {
+        setCartAdded(false);
+      }, 500);
+    } catch (requestError) {
+      setCartError(
+        requestError.response?.data?.message ||
+          'Unable to add item to your cart.'
+      );
+    } finally {
+      setCartLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
@@ -106,15 +152,24 @@ function ProductDetails() {
               </p>
 
               <div className="pt-4">
+                {cartError && (
+                  <p className="mb-2 text-sm text-rose-600" role="alert">
+                    {cartError}
+                  </p>
+                )}
                 <button
-                  disabled={product.stock === 0}
+                  type="button"
+                  onClick={handleAddToCart}
+                  disabled={product.stock === 0 || cartLoading}
                   className={`w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-white shadow-md transition-all duration-200 ${
-                    product.stock > 0
+                    product.stock > 0 && !cartAdded
                       ? 'bg-indigo-600 hover:bg-indigo-700 active:scale-95'
-                      : 'bg-gray-400 cursor-not-allowed'
+                      : cartAdded
+                        ? 'bg-green-600'
+                        : 'bg-gray-400 cursor-not-allowed'
                   }`}
                 >
-                  Add to Cart
+                  {cartLoading ? 'Adding...' : cartAdded ? 'Added' : 'Add to Cart'}
                 </button>
               </div>
             </div>

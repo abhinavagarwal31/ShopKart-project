@@ -1,13 +1,25 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { axiosInstance } from '../axiosCalls/axios';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
   const { customer, wishlist, setWishlist } = useAuth();
+  const { addToCart } = useCart();
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const [wishlistError, setWishlistError] = useState('');
+  const [cartLoading, setCartLoading] = useState(false);
+  const [cartError, setCartError] = useState('');
+  const [cartAdded, setCartAdded] = useState(false);
+  const cartAddedTimeout = useRef(null);
+
+  useEffect(() => () => {
+    if (cartAddedTimeout.current) {
+      clearTimeout(cartAddedTimeout.current);
+    }
+  }, []);
 
   // Guard clause: Render error state if no product data is provided
   if (!product) {
@@ -72,6 +84,37 @@ const ProductCard = ({ product }) => {
       );
     } finally {
       setWishlistLoading(false);
+    }
+  };
+
+  const handleAddToCart = async (e) => {
+    e.stopPropagation();
+
+    if (!customer) {
+      navigate('/login');
+      return;
+    }
+
+    if (!_id || stock < 1 || cartLoading) {
+      return;
+    }
+
+    setCartLoading(true);
+    setCartError('');
+    setCartAdded(false);
+
+    try {
+      await addToCart(_id);
+      setCartAdded(true);
+      cartAddedTimeout.current = setTimeout(() => {
+        setCartAdded(false);
+      }, 500);
+    } catch (error) {
+      setCartError(
+        error.response?.data?.message || 'Unable to add item to your cart.'
+      );
+    } finally {
+      setCartLoading(false);
     }
   };
 
@@ -165,7 +208,30 @@ const ProductCard = ({ product }) => {
         </div>
 
         {/* Action Button */}
-        <div className="mt-5">
+        <div className="mt-5 space-y-2">
+          {cartError && (
+            <p className="text-xs text-rose-600" role="alert">
+              {cartError}
+            </p>
+          )}
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            disabled={stock < 1 || cartLoading}
+            className={`w-full text-white font-medium py-2.5 px-4 rounded-xl transition duration-150 ease-in-out shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:cursor-not-allowed disabled:bg-gray-400 ${
+              cartAdded
+                ? 'bg-green-600 focus:ring-green-500'
+                : 'bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 focus:ring-emerald-500'
+            }`}
+          >
+            {cartLoading
+              ? 'Adding...'
+              : cartAdded
+                ? 'Added'
+                : stock > 0
+                  ? 'Add to Cart'
+                  : 'Out of Stock'}
+          </button>
           <button
             type="button"
             onClick={handleViewDetails}
