@@ -29,7 +29,7 @@ app.use('/customers', customerRouter)
 app.use('/products', productRouter)
 app.use('/wishlist', wishRouter)
 app.use('/cart', cartRouter)
-app.use('/order', orderRouter)
+app.use('/orders', orderRouter)
 
 
 
