@@ -72,7 +72,6 @@ export const loginCustomer = async(req, res) =>{
             success: true,
             message: "Login successful"
         })
-        console.log(`Customer Logged in with the name ${customer.fullName}`)
 
 
     } catch (error) {
